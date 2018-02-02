@@ -16,6 +16,7 @@ Développer un site de questions/réponses sur le modèle de [Quora](https://www
 3. Tout peut être fait à l'aide des composants de Symfony que vous avez déjà vus en cours (ou presque :grimacing:).
 4. Pensez à l'ergonomie :nerd_face: => Flash messages, navigation spécifique le cas échéant.
 5. N'oubliez pas de **fournir un export de votre base de données** (les données seules) OU **fournir des Fixtures** (mieux, mais pas prioritaire). **S'il y'a des users/mots de passe indiquez-les dans un README à l'intention du correcteur.**
+6. **Utilisez Trello pour organiser vos tâches !** Vous y verrez plus clair, _vraiment_.
 
 ## Structure du site
 
@@ -29,7 +30,6 @@ Développer un site de questions/réponses sur le modèle de [Quora](https://www
 - **Poser une question**,
 - Sur la page **Question**, un formulaire permettant d'**Ajouter une réponse** à cette question (directement dans la page, sous la question),
     - :hand: => Dans la liste des réponses, un bouton permet de valider une réponse. **Seul l'utilisateur qui a posé la question** peut indiquer une réponse comme étant **valide. La réponse validée doit s'afficher de façon distincte et en premier dans la liste des réponses**.
-
 - **Mon Profil** : permet de consulter ses propres informations utilisateur, la liste de ses questions, et de ses réponses, avec un lien pour s'y rendre.
     - Sur cette page, un lien **Modifier mon Profil** qui permet de modifier ses propres informations (au minimum username, email, mot de passe).
 
@@ -75,4 +75,10 @@ Vous pouvez soit utiliser un Bundle tout fait, soit le faire à la main avec Doc
 
 ## Le mot de la fin
 
-Bon courage :slightly_smiling_face: :muscle: et n'oubliez pas d'écrire une petite note dans un README à l'intention du prof' pour décrire ce que vous avez fait, ou pas fait. Tout schéma ou document (même scanné !) ayant servi à créer l'appli sera le bienvenu dans le repo final !
+Bon courage :slightly_smiling_face: :muscle: et n'oubliez pas d'écrire une petite note dans un README à l'intention du prof' pour décrire ce que vous avez fait, ou pas fait.
+
+Tout schéma ou document (même scanné !) ayant servi à créer l'appli sera le bienvenu dans le repo final !
+
+Merci.
+
+Et _Think Trello :wink:_
