@@ -21,3 +21,9 @@
 
 - [User stories](docs/user_stories.md) : à partir de l'énoncé, on décrit tous les besoins et les actions nécessaires.
 - [Liste des tâches &#x1F5D7;](https://trello.com/b/lnb6nCDy/faq-oclock) : à partir des User stories, on crée un backlog des tâches à effectuer (tableau kanban par exemple).
+
+## Les Sprints
+
+> Le terme "Sprint" est utilisé de manière un peu abusive ici, il s'agit surtout d'étapes de développement.
+
+- [Sprint Setup](README_setup.md)
