@@ -17,11 +17,21 @@
                 
                 <div id="right">
                     <span class="mr-2">Bienvenue invité</span>
-                    <a href=""class="btn btn-danger">Poser une question</a>
+                    <a href="{{ path('question_add') }}" class="btn btn-danger">Poser une question</a>
                 </div>
             </nav>
             
             <hr>
+
+            {# display every flash message available #}
+            {% for label, messages in app.flashes %}
+                {% for message in messages %}
+                    <div class="alert alert-{{ label }}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endfor %}
+
             <div class="row">
                 <div class="col">
                     {% block body %}{% endblock %}

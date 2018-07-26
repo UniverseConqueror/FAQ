@@ -17,6 +17,12 @@ html {
 
 .answer {
     padding: 0.5em;
+    overflow: auto;
+}
+
+.answer .btn {
+    float: right;
+    font-size: 0.75em;
 }
 
 .answer.validated {

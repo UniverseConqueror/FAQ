@@ -22,3 +22,22 @@ Depuis les wireframes nos intégrons notre layout principal avec Bootstrap (ou a
 - On boucle sur les réponses et on les affiche.
 - Pour afficher la réponse validée en premier on peut utiliser une requête custom ou bien utiliser l'annotation `@ORM\OrderBy` sur l'entité Question vers Answer. On peut également en profiter pour classer par date de création les autres réponses.
 - On conditionne le style graphique de la réponse dans notre CSS.
+
+## Poser une question
+
+- On crée un formulaire avec `php bin/console make:form`
+- On installe le formulaire sur la page "Poser une question"
+- On supprime tous les champs que le ne doit pas modifier et on gère les valeurs par défaut dans le `__construct` de l'entité.
+- On associe un user à la question (pour le moment un user choisi dans les existants).
+- On gère les contraintes, les flashs.
+
+## Proposer une réponse
+
+- On crée un formulaire avec `php bin/console make:form`
+- On installe le formulaire sur la page "Question"
+- On supprime tous les champs que le ne doit pas modifier et on gère les valeurs par défaut dans le `__construct` de l'entité.
+- On gère les contraintes, les flashs.
+
+## Accepter une réponse
+
+- Pour le moment on se contente d'ajouter un lien de validation, on gèrera les droits plus tard.

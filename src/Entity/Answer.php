@@ -4,6 +4,8 @@ namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 
+use Symfony\Component\Validator\Constraints as Assert;
+
 /**
  * @ORM\Entity(repositoryClass="App\Repository\AnswerRepository")
  */
@@ -18,6 +20,7 @@ class Answer
 
     /**
      * @ORM\Column(type="text")
+     * @Assert\NotBlank()
      */
     private $body;
 
@@ -52,6 +55,14 @@ class Answer
      * @ORM\JoinColumn(nullable=false)
      */
     private $user;
+
+    public function __construct()
+    {
+        $this->createdAt = new \DateTime;
+        $this->votes = 0;
+        $this->isBlocked = false;
+        $this->isValidated = false;
+    }
 
     public function getId()
     {
