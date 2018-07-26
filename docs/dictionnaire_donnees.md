@@ -10,6 +10,7 @@
 |**created_at**|date de création de la question|date/heure
 |**votes**|nombre de votes|entier
 |**is_blocked**|question bloquée par un modérateur|booléen
+|**is_solved**|la questoin a-t-elle une réponse acceptée ?|booléen
 |**user**|auteur de la question|_relation_
 |**tags**|liste des catégories associées|_relation_
 

@@ -61,7 +61,7 @@ class AppFixtures extends Fixture
         // Answers
         $populator->addEntity('App\Entity\Answer', 50, [
             'body' => function () use ($generator) {
-                return $generator->unique()->paragraph($nbSentences = 1, $variableNbSentences = true);
+                return $generator->unique()->paragraph($nbSentences = 3, $variableNbSentences = true);
             },
             'createdAt' => function () use ($generator) {
                 return $generator->unique()->dateTime($max = 'now', $timezone = null);

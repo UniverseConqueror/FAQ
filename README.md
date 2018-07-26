@@ -27,3 +27,4 @@
 > Le terme "Sprint" est utilisé de manière un peu abusive ici, il s'agit surtout d'étapes de développement.
 
 - [Sprint Setup](README_setup.md)
+- [Sprint Base](README_base.md)

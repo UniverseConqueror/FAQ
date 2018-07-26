@@ -51,6 +51,7 @@ class Question
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Answer", mappedBy="question", orphanRemoval=true)
+     * @ORM\OrderBy({"isValidated" = "DESC", "createdAt" = "ASC"})
      */
     private $answers;
 
@@ -58,6 +59,11 @@ class Question
      * @ORM\ManyToMany(targetEntity="App\Entity\Tag", inversedBy="questions")
      */
     private $tags;
+
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $isSolved;
 
     public function __construct()
     {
@@ -195,6 +201,18 @@ class Question
         if ($this->tags->contains($tag)) {
             $this->tags->removeElement($tag);
         }
+
+        return $this;
+    }
+
+    public function getIsSolved(): ?bool
+    {
+        return $this->isSolved;
+    }
+
+    public function setIsSolved(bool $isSolved): self
+    {
+        $this->isSolved = $isSolved;
 
         return $this;
     }

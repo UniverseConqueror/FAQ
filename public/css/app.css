@@ -1,0 +1,42 @@
+html {
+    overflow-y: scroll;
+}
+
+.navbar #right span {
+    vertical-align: middle;
+}
+
+.question-container h2 {
+    font-size: 1.3em;
+}
+
+.question-container h2 .badge {
+    font-size: 0.6em;
+    vertical-align: middle;
+}
+
+.answer {
+    padding: 0.5em;
+}
+
+.answer.validated {
+    /* content: "✓";
+    float: left; */
+    background-color: #d4edda;
+}
+.answer.validated::before {
+    color: forestgreen;
+    content: "✓";
+    /* float: left; */
+    font-size: 2em;
+}
+
+.small-grey-text {
+    color: grey;
+    font-size: 0.9em;
+}
+
+footer {
+    color: grey;
+    text-align: center;
+}

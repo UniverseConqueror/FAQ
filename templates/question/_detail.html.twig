@@ -1,0 +1,32 @@
+<div class="question-container">
+    <h2>
+        {% if detail is defined %}
+            {{ question.title }}
+        {% else %}
+            <a href="{{ path('question_show', {'id': question.id}) }}">{{ question.title }}</a>
+        {% endif %}
+        <span class="badge badge-{{ question.isSolved ? 'success' : 'warning' }}">
+            {{ question.isSolved ? 'Résolue' : 'En attente' }}
+        </span>
+    </h2>
+
+    <p class="small-grey-text">
+        Posée par
+        <strong>{{ question.user.username }}</strong> le {{ question.createdAt|date("d/m/Y à h:i") }}
+        <br>
+        <i><b>{{ question.answers|length }}</b> réponse(s)</i>
+    </p>
+
+    {% if detail is defined %}
+    <p class="question-body">
+        {{ question.body }}
+    </p>
+    {% endif %}
+
+    <div>
+        {% for tag in question.tags %} {#
+        <a href="{{ path('question_by_tag', {'slug': tag.name}) }}"> #}
+            <span class="badge badge-secondary">{{ tag.name }}</span>
+            {# </a> #} {% endfor %}
+    </div>
+</div>

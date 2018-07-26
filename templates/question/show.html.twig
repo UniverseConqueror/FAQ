@@ -1,0 +1,27 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ question.title }}{% endblock %}
+
+{% block body %}
+
+{% include 'question/_detail.html.twig' with {'detail': true} %}
+
+<hr>
+
+<h3>{{ question.answers|length }} Réponse(s)</h3>
+
+{% for answer in question.answers %}
+<hr>
+<div class="answer{{ answer.isValidated ? ' validated' : '' }}">
+    <div>
+        {{ answer.body }}
+    </div>
+    <div class="small-grey-text">
+        par <b class="username">{{ answer.user.username }}</b> le {{ answer.createdAt|date("d/m/Y à h:i") }}
+    </div>
+</div>
+{% else %}
+<p class="text-secondary">Pas de réponse pour le moment, une idée, ou bien connaissez-vous quelqu'un qui pourrait répondre ?</p>
+{% endfor %}
+
+{% endblock %}
