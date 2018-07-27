@@ -16,6 +16,7 @@ Depuis les wireframes nos intégrons notre layout principal avec Bootstrap (ou a
 
 - On va la chercher et on affiche toutes ses infos.
 - On en profite pour mutualiser le bloc qui affiche les infos sur la home avec celui-ci (pas toujours une bonne idée mais ici ça s'y prête plutôt bien). On adapte le code du partiel selon une variable transmise à l'include.
+- A noter ici que les requêtes sont optimisable en faisant des jointures.
 
 ### Réponses
 

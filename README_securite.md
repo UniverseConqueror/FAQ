@@ -25,3 +25,11 @@ Nous configurons le module avec notre entité User.
 
 - Ajout du formulaire d'inscription => `make:form` basé sur `User` et on adapte.
 - Ajout d'un controller `User` + gestion du form + encodage du mot de passe.
+
+## Consulter mon compte
+
+- Ajout d'une page profil : affichage info user + liens d'édition.
+- Liste des questions : on reprend le partiel précédent (pas forcément le mieux ici mais ça peut s'optimiser plus tard).
+- Liste des réponses : on fait le lien vers la question associée.
+- A noter ici que les requêtes sont optimisable en faisant des jointures.
+
