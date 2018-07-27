@@ -4,6 +4,7 @@ namespace App\DataFixtures;
 
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\Persistence\ObjectManager;
+use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 use App\Entity\User;
 
@@ -11,6 +12,13 @@ use Faker;
 
 class AppFixtures extends Fixture
 {
+    private $encoder;
+
+    public function __construct(UserPasswordEncoderInterface $encoder)
+    {
+        $this->encoder = $encoder;
+    }
+
     public function load(ObjectManager $manager)
     {
         // On crée une instance de Faker en français
@@ -24,10 +32,11 @@ class AppFixtures extends Fixture
         $usersEntities = array();
 
         foreach($users as $u) {
-            // New user bases on list
+            // New user based on list
             $user = new User();
             $user->setUsername(\ucfirst($u));
-            $user->setPassword($u);
+            $user->setPassword($this->encoder->encodePassword($user, $u));
+            $user->setEmail($u.'@faq.oclock.io');
             // Add it to the list of entities
             $usersEntities[] = $user;
             // Persist
