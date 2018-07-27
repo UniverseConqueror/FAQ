@@ -18,15 +18,14 @@
     </p>
 
     {% if detail is defined %}
-    <p class="question-body">
+    <p>
         {{ question.body }}
     </p>
     {% endif %}
 
-    <div>
-        {% for tag in question.tags %} {#
-        <a href="{{ path('question_by_tag', {'slug': tag.name}) }}"> #}
-            <span class="badge badge-secondary">{{ tag.name }}</span>
-            {# </a> #} {% endfor %}
+    <div class="tags">
+        {% for tag in question.tags %}
+            {% include 'question/_tags.html.twig' %}
+        {% endfor %}
     </div>
 </div>

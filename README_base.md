@@ -15,7 +15,7 @@ Depuis les wireframes nos intégrons notre layout principal avec Bootstrap (ou a
 ### Question
 
 - On va la chercher et on affiche toutes ses infos.
-- On en profite pour mutualiser le bloc qui affiche les infos sur la home avec celui-ci (pas toujours une bonne idée mais ici ça s'y prête plutôt bien). On adapte le code du partial selon une variable transmise à l'include.
+- On en profite pour mutualiser le bloc qui affiche les infos sur la home avec celui-ci (pas toujours une bonne idée mais ici ça s'y prête plutôt bien). On adapte le code du partiel selon une variable transmise à l'include.
 
 ### Réponses
 
@@ -41,3 +41,10 @@ Depuis les wireframes nos intégrons notre layout principal avec Bootstrap (ou a
 ## Accepter une réponse
 
 - Pour le moment on se contente d'ajouter un lien de validation, on gèrera les droits plus tard.
+
+## Filtrer les questions par tag
+
+- On modifie notre page index pour y ajouter la notion de tag. On aurait pu faire uné méthode à part mais ainsi on voit une approche où l'on mutualise du code (et on observe si ça vaut le coup ou pas).
+- On crée une requête custom dans QuestionRepository pour JOIN sur les tags, on passe directement l'objet $tag.
+- On ajoute le lien sur le partiel qui affiche les tags.
+- Fioriture : on met la liste des tags dans un partiel pour usage en home et sur la question + mise en évidence du tag recherché via `$selectedTag`.

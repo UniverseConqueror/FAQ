@@ -19,6 +19,16 @@ class QuestionRepository extends ServiceEntityRepository
         parent::__construct($registry, Question::class);
     }
 
+    public function findByTag($tag)
+    {
+        return $this->createQueryBuilder('q')
+            ->innerJoin('q.tags', 't')
+            ->andWhere('t = :tag')
+            ->setParameter('tag', $tag)
+            ->getQuery()
+            ->getResult();
+    }
+
 //    /**
 //     * @return Question[] Returns an array of Question objects
 //     */

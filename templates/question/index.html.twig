@@ -3,6 +3,11 @@
 {% block title %}Questions posées{% endblock %}
 
 {% block body %}
+
+<p class="tags">Filtrer par mot-clé : {% for tag in tags %}
+    {% include 'question/_tags.html.twig' %}
+{% endfor %}</p>
+
 <h1>Questions posées</h1>
 
 {% for question in questions %}

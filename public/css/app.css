@@ -7,12 +7,20 @@ html {
 }
 
 .question-container h2 {
-    font-size: 1.3em;
+    font-size: 1.5em;
 }
 
 .question-container h2 .badge {
     font-size: 0.6em;
     vertical-align: middle;
+}
+
+.tags a {
+    color: white;
+}
+
+.tags .badge.highlight {
+    background-color: crimson;
 }
 
 .answer {
