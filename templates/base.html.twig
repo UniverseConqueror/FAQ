@@ -16,8 +16,16 @@
                 </div>
                 
                 <div id="right">
-                    <span class="mr-2">Bienvenue invité</span>
+                    {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+                    <span class="mr-2">Bienvenue <b><a href="{{ path('question_list') }}">{{ app.user.username }}</a></b></span>
                     <a href="{{ path('question_add') }}" class="btn btn-danger">Poser une question</a>
+                    <a href="{{ path('logout') }}" class="btn btn-secondary">Déconnexion</a>
+                    {% else %}
+                    <span class="mr-2">Bienvenue invité</span>
+                    <a href="{{ path('user_register') }}" class="btn btn-success">Inscription</a>
+                    <a href="{{ path('login') }}" class="btn btn-primary">Connexion</a>
+                    {% endif %}
+
                 </div>
             </nav>
             

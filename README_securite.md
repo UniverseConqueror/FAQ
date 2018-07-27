@@ -14,3 +14,14 @@ Nous configurons le module avec notre entité User.
 - On va ajouter une route protégée juste pour tester le login, disons sur `/question/add`.
 - Ca marche :)
 
+## Login/logout
+
+- On va enchainer avec la création d'un formulaire de login, cf : http://symfony.com/doc/current/security/form_login_setup.html.
+- On va créer une classe de formulaire pour le login afin de bénéficier de tout le système (templates, messages d'erreurs). Cela nécessitera une configuration supplémentaire du .yaml, cf : http://symfony.com/doc/current/reference/configuration/security.html#username-parameter
+- On ajoute le logout, cf : http://symfony.com/doc/current/security.html#logging-out
+- On ajuste le template header pour gérer la nav user.
+
+## Inscription
+
+- Ajout du formulaire d'inscription => `make:form` basé sur `User` et on adapte.
+- Ajout d'un controller `User` + gestion du form + encodage du mot de passe.
