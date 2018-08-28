@@ -21,6 +21,7 @@ use App\Entity\UserQuestionVote;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use App\Repository\UserQuestionVoteRepository;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 class QuestionController extends Controller
 {
@@ -29,7 +30,7 @@ class QuestionController extends Controller
      * @Route("/tag/{name}", name="question_list_by_tag")
      * @ParamConverter("tag", class="App:Tag")
      */
-    public function list(Request $request, QuestionRepository $questionRepository, Tag $tag = null)
+    public function list(Request $request, QuestionRepository $questionRepository, Tag $tag = null, AuthorizationCheckerInterface $authChecker)
     {
         // On vérifie si on vient de la route "question_list_by_tag"
         if($request->attributes->get('_route') == 'question_list_by_tag' && $tag === null) {
@@ -43,14 +44,23 @@ class QuestionController extends Controller
             return $this->redirectToRoute('question_list');
         }
 
+        // Questions non bloquées visibles par modérateur
+        if ($authChecker->isGranted('ROLE_MODERATOR')) {
+            $blockedFilter = false;
+            $criteria = [];
+        } else {
+            $blockedFilter = true;
+            $criteria = ['isBlocked' => false];
+        }
+
         // On va chercher la liste des questions par ordre inverse de date
         if($tag) {
             // Avec tag
-            $questions = $questionRepository->findByTag($tag);
+            $questions = $questionRepository->findByTag($tag, $blockedFilter);
             $selectedTag = $tag->getName();
         } else {
             // Sans tag
-            $questions = $questionRepository->findBy(['isBlocked' => false], ['votes' => 'DESC', 'createdAt' => 'DESC']);
+            $questions = $questionRepository->findBy($criteria, ['votes' => 'DESC', 'createdAt' => 'DESC']);
             $selectedTag = null;
         }
 
@@ -67,7 +77,7 @@ class QuestionController extends Controller
     /**
      * @Route("/question/{id}", name="question_show", requirements={"id": "\d+"})
      */
-    public function show(Question $question, Request $request, UserRepository $userRepository, AnswerRepository $answerRepository)
+    public function show(Question $question, Request $request, UserRepository $userRepository, AnswerRepository $answerRepository, AuthorizationCheckerInterface $authChecker)
     {
         // Is question blocked ?
         if ($question->getIsBlocked()) {
@@ -100,10 +110,16 @@ class QuestionController extends Controller
             return $this->redirectToRoute('question_show', ['id' => $question->getId()]);
         }
 
-        // Réponses non bloquées
+        // Réponses non bloquées visible par modérateur
+        if ($authChecker->isGranted('ROLE_MODERATOR')) {
+            $blockedCriteria = true;
+        } else {
+            $blockedCriteria = false;
+        }
+
         $answersNonBlocked = $answerRepository->findBy([
             'question' => $question,
-            'isBlocked' => false,
+            'isBlocked' => $blockedCriteria,
         ], [
             'isValidated' => 'DESC',
             'votes' => 'DESC',

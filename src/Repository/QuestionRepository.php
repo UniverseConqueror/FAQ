@@ -19,16 +19,20 @@ class QuestionRepository extends ServiceEntityRepository
         parent::__construct($registry, Question::class);
     }
 
-    public function findByTag($tag)
+    public function findByTag($tag, $blockedFilter)
     {
-        return $this->createQueryBuilder('q')
+        $query = $this->createQueryBuilder('q')
             ->innerJoin('q.tags', 't')
             ->andWhere('t = :tag')
-            ->andWhere('q.isBlocked = false')
             ->addOrderBy('q.votes', 'DESC')
-            ->setParameter('tag', $tag)
-            ->getQuery()
-            ->getResult();
+            ->setParameter('tag', $tag);
+            
+        if ($blockedFilter) {
+            $query->andWhere('q.isBlocked = false');
+        }
+            
+        
+        return $query->getQuery()->getResult();
     }
 
 //    /**
