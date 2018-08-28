@@ -7,15 +7,15 @@
 <h1>Mon compte</h1>
 
 <dl class="row">
-    <dt class="col-2">Nom d'utilisateur</dt>
-    <dd class="col-10">{{ user.username }}</dd>
-    <dt class="col-2">Adresse e-mail</dt>
-    <dd class="col-10">{{ user.email }}</dd>
+    <dt class="col-3">Nom d'utilisateur</dt>
+    <dd class="col-9">{{ user.username }}</dd>
+    <dt class="col-3">Adresse e-mail</dt>
+    <dd class="col-9">{{ user.email }}</dd>
 </dl>
 
 <p>
-    <a href="" class="btn btn-sm btn-primary">Modifier mon profil</a>
-    <a href="" class="btn btn-sm btn-primary">Modifier mon mot de passe</a>
+    <a href="{{ path('user_edit') }}" class="btn btn-sm btn-primary">Modifier mon profil</a>
+    <a href="{{ path('user_edit_password') }}" class="btn btn-sm btn-primary">Modifier mon mot de passe</a>
 </p>
 
 <hr>

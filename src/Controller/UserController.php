@@ -9,6 +9,8 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
 use App\Entity\User;
 use App\Form\RegisterType;
+use App\Form\UserEditType;
+use App\Form\UserPasswordType;
 
 class UserController extends Controller
 {
@@ -52,4 +54,59 @@ class UserController extends Controller
             'user' => $user,
         ]);
     }
+
+    /**
+     * @Route("/user/edit", name="user_edit")
+     */
+    public function edit(Request $request)
+    {
+        $user = $this->getUser();
+
+        $form = $this->createForm(UserEditType::class, $user);
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->flush();
+
+            $this->addFlash('success', 'Profil modifié.');
+
+            return $this->redirectToRoute('user_profile');
+        }
+
+        return $this->render('user/edit.html.twig', [
+            'form' => $form->createView(),
+        ]);
+    }
+
+    /**
+     * @Route("/user/edit/password", name="user_edit_password")
+     */
+    public function editPassword(Request $request, UserPasswordEncoderInterface $encoder)
+    {
+        $user = $this->getUser();
+
+        $form = $this->createForm(UserPasswordType::class, $user);
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+
+            $user->setPassword($encoder->encodePassword($user, $user->getPassword()));
+
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->flush();
+
+            $this->addFlash('success', 'Mot de passe modifié.');
+
+            return $this->redirectToRoute('user_profile');
+        }
+
+        return $this->render('user/edit_password.html.twig', [
+            'form' => $form->createView(),
+        ]);
+    }
+
 }

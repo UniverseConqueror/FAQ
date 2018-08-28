@@ -33,3 +33,8 @@ Nous configurons le module avec notre entité User.
 - Liste des réponses : on fait le lien vers la question associée.
 - A noter ici que les requêtes sont optimisable en faisant des jointures.
 
+## Modifier mon profil
+
+- Pour se simplifier la vie (notamment gestion password) on va scinder l'édition du compte en édition user + email puis mot de passe.
+- On crée un form d'édition username + e-mail (copié depuis RegisterType) et on supprime l'update du passe dans la méthode de contrôleur copiée.
+- On crée un form d'édition password (copié depuis RegisterType).
