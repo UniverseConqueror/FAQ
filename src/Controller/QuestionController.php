@@ -15,9 +15,6 @@ use App\Form\QuestionType;
 use App\Form\AnswerType;
 use App\Repository\QuestionRepository;
 use App\Repository\UserRepository;
-use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
-use Symfony\Component\Serializer\Encoder\JsonEncoder;
-use Symfony\Component\Serializer\Serializer;
 use App\Entity\User;
 
 class QuestionController extends Controller

@@ -19,6 +19,9 @@
                     {% if is_granted('IS_AUTHENTICATED_FULLY') %}
                     <span class="mr-2">Bienvenue <b>{{ app.user.username }}</b></span>
                     <a href="{{ path('question_add') }}" class="btn btn-danger">Poser une question</a>
+                    {% if is_granted('ROLE_MODERATOR') %}
+                    <a href="{{ path('tag_index') }}" class="btn btn-success">Tags</a>
+                    {% endif %}
                     <a href="{{ path('user_profile') }}" class="btn btn-primary">Mon compte</a>
                     <a href="{{ path('logout') }}" class="btn btn-secondary">Déconnexion</a>
                     {% else %}
