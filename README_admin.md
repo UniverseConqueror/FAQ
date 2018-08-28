@@ -42,3 +42,8 @@
 - On met à jour l'`access_control` sur le rôle `ROLE_ADMIN`.
 - On ajoute le lien conditionné dans le header.
 - On ajoute une `__toString()` ou on spécifie le champ à afficher dans le `ChoiceType`.
+
+## Oubli : Accepter la réponse de l'auteur seulement
+
+- user doit être connecté (ACL) => update de l'`access_control`.
+- user connecté = auteur question => on ajoute cette vérification sinon `throw 403` dans `AnswerController`.
