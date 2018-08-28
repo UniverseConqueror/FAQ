@@ -11,13 +11,14 @@ use App\Entity\User;
 use App\Form\RegisterType;
 use App\Form\UserEditType;
 use App\Form\UserPasswordType;
+use App\Repository\RoleRepository;
 
 class UserController extends Controller
 {
     /**
      * @Route("/user/register", name="user_register")
      */
-    public function register(Request $request, UserPasswordEncoderInterface $encoder)
+    public function register(Request $request, UserPasswordEncoderInterface $encoder, RoleRepository $roleRepository)
     {
         $user = new User();
 
@@ -28,6 +29,9 @@ class UserController extends Controller
         if ($form->isSubmitted() && $form->isValid()) {
             // Encodage du mot de passe
             $user->setPassword($encoder->encodePassword($user, $user->getPassword()));
+            // Assignartion du rôle par défaut VIA le nom du rôle et non l'ID
+            $role = $roleRepository->findOneByRoleString('ROLE_USER');
+            $user->setRole($role);
 
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($user);

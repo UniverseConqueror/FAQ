@@ -51,6 +51,12 @@ class User implements UserInterface, \Serializable
      */
     private $answers;
 
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Role")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $role;
+
     public function __construct()
     {
         $this->isActive = true;
@@ -94,7 +100,7 @@ class User implements UserInterface, \Serializable
 
     public function getRoles()
     {
-        return array('ROLE_USER');
+        return array($this->getRole()->getRoleString());
     }
 
     public function eraseCredentials()
@@ -230,6 +236,18 @@ class User implements UserInterface, \Serializable
     public function setIsActive($isActive)
     {
         $this->isActive = $isActive;
+
+        return $this;
+    }
+
+    public function getRole(): ?Role
+    {
+        return $this->role;
+    }
+
+    public function setRole(?Role $role): self
+    {
+        $this->role = $role;
 
         return $this;
     }

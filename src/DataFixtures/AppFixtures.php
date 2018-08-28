@@ -9,6 +9,8 @@ use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use App\Entity\User;
 
 use Faker;
+use App\Repository\RoleRepository;
+use App\Entity\Role;
 
 class AppFixtures extends Fixture
 {
@@ -27,20 +29,44 @@ class AppFixtures extends Fixture
         // On passe le Manager de Doctrine à Faker !
         $populator = new Faker\ORM\Doctrine\Populator($generator, $manager);
 
+        // Roles
+        $roles = [
+            'admin' => 'Administrateur',
+            'moderator' => 'Modérateur',
+            'user' => 'Utilisateur',
+        ];
+
         // Users : seront créés en dur pour pouvoir les manipuler en attendant le module de sécurité
-        $users = array('claire', 'jc', 'micheline', 'jeanette', 'victoria', 'gertrude', 'roland', 'marc', 'alfred', 'michel');
+        $userGroup = array(
+            'admin' => ['claire', 'jc'],
+            'moderator' => ['micheline', 'jeanette', 'victoria'],
+            'user' => ['gertrude', 'roland', 'marc', 'alfred', 'michel'],
+        );
         $usersEntities = array();
 
-        foreach($users as $u) {
-            // New user based on list
-            $user = new User();
-            $user->setUsername(\ucfirst($u));
-            $user->setPassword($this->encoder->encodePassword($user, $u));
-            $user->setEmail($u.'@faq.oclock.io');
-            // Add it to the list of entities
-            $usersEntities[] = $user;
-            // Persist
-            $manager->persist($user);
+        foreach($userGroup as $roleGroup => $users) {
+            // Role
+            $role = new Role();
+            $role->setRoleString('ROLE_'.mb_strtoupper($roleGroup));
+            $role->setName($roles[$roleGroup]);
+            $manager->persist($role);
+
+            print 'Adding role '.$role->getName();
+            
+            foreach($users as $u) {
+                // New user based on list
+                $user = new User();
+                $user->setUsername(\ucfirst($u));
+                $user->setPassword($this->encoder->encodePassword($user, $u));
+                $user->setEmail($u.'@faq.oclock.io');
+                $user->setRole($role);
+                // Add it to the list of entities
+                $usersEntities[] = $user;
+                // Persist
+                $manager->persist($user);
+
+                print 'Adding user '.$user->getUsername();
+            }
         }
 
         // Tags
