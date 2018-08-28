@@ -31,4 +31,25 @@ class AnswerController extends Controller
         // Redirection
         return $this->redirectToRoute('question_show', ['id' => $answer->getQuestion()->getId()]);
     }
+
+    /**
+     * @Route("/admin/answer/toggle/{id}", name="admin_answer_toggle")
+     */
+    public function adminToggle(Answer $answer = null)
+    {
+        if (null === $answer) {
+            throw $this->createNotFoundException('Réponse non trouvée.');
+        }
+
+        // Inverse the boolean value via not (!)
+        $answer->setIsBlocked(!$answer->getIsBlocked());
+        // Save
+        $em = $this->getDoctrine()->getManager();
+        $em->flush();
+
+        $this->addFlash('success', 'Réponse modérée.');
+
+        return $this->redirectToRoute('question_show', ['id' => $answer->getQuestion()->getId()]);
+    }
+
 }

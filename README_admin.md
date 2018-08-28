@@ -47,3 +47,15 @@
 
 - user doit être connecté (ACL) => update de l'`access_control`.
 - user connecté = auteur question => on ajoute cette vérification sinon `throw 403` dans `AnswerController`.
+
+## Bloquer ou débloquer une question
+## Bloquer ou débloquer une réponse
+
+> Nos entités ont déjà les champs requis, `isBlocked`. Gérons la partie modération puis la partie affichage.
+
+- Créons une route qui permet de _toggle_ le statut de la question, ainsi on simplifie l'écriture du code.
+- Ajout d'un lien conditionné par le droit `ROLE_MODERATOR` (ACL + template).
+    - On ajoute une classe CSS pour conditionner l'affichage.
+- On fait de même pour les réponses.
+- Les questions bloquées ne doivent pas apparaitrent aux users.
+- Idem réponses bloquées.

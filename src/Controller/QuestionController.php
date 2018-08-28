@@ -16,6 +16,7 @@ use App\Form\AnswerType;
 use App\Repository\QuestionRepository;
 use App\Repository\UserRepository;
 use App\Entity\User;
+use App\Repository\AnswerRepository;
 
 class QuestionController extends Controller
 {
@@ -45,7 +46,7 @@ class QuestionController extends Controller
             $selectedTag = $tag->getName();
         } else {
             // Sans tag
-            $questions = $questionRepository->findBy([], ['createdAt' => 'DESC']);
+            $questions = $questionRepository->findBy(['isBlocked' => false], ['createdAt' => 'DESC']);
             $selectedTag = null;
         }
 
@@ -62,8 +63,13 @@ class QuestionController extends Controller
     /**
      * @Route("/question/{id}", name="question_show", requirements={"id": "\d+"})
      */
-    public function show(Question $question, Request $request, UserRepository $userRepository)
+    public function show(Question $question, Request $request, UserRepository $userRepository, AnswerRepository $answerRepository)
     {
+        // Is question blocked ?
+        if ($question->getIsBlocked()) {
+            throw $this->createAccessDeniedException('Non autorisé.');
+        }
+
         $answer = new Answer();
 
         $form = $this->createForm(AnswerType::class, $answer);
@@ -90,8 +96,15 @@ class QuestionController extends Controller
             return $this->redirectToRoute('question_show', ['id' => $question->getId()]);
         }
 
+        // Réponses non bloquées
+        $answersNonBlocked = $answerRepository->findBy([
+            'question' => $question,
+            'isBlocked' => false,
+        ]);
+
         return $this->render('question/show.html.twig', [
             'question' => $question,
+            'answersNonBlocked' => $answersNonBlocked,
             'form' => $form->createView(),
         ]);
     }
@@ -128,6 +141,26 @@ class QuestionController extends Controller
         return $this->render('question/add.html.twig', [
             'form' => $form->createView(),
         ]);
+    }
+
+    /**
+     * @Route("/admin/question/toggle/{id}", name="admin_question_toggle")
+     */
+    public function adminToggle(Question $question = null)
+    {
+        if (null === $question) {
+            throw $this->createNotFoundException('Question non trouvée.');
+        }
+
+        // Inverse the boolean value via not (!)
+        $question->setIsBlocked(!$question->getIsBlocked());
+        // Save
+        $em = $this->getDoctrine()->getManager();
+        $em->flush();
+
+        $this->addFlash('success', 'Question modérée.');
+
+        return $this->redirectToRoute('question_show', ['id' => $question->getId()]);
     }
 
 }

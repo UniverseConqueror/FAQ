@@ -24,6 +24,7 @@ class QuestionRepository extends ServiceEntityRepository
         return $this->createQueryBuilder('q')
             ->innerJoin('q.tags', 't')
             ->andWhere('t = :tag')
+            ->andWhere('q.isBlocked = false')
             ->setParameter('tag', $tag)
             ->getQuery()
             ->getResult();

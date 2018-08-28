@@ -1,4 +1,6 @@
-<div class="question-container">
+{% set questionClass = question.isblocked ? 'blocked' : '' %}
+
+<div class="question-container {{ questionClass }}">
     <h2>
         {% if detail is defined %}
             {{ question.title }}

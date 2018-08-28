@@ -6,6 +6,13 @@ html {
     vertical-align: middle;
 }
 
+.question-container.blocked, .answer.blocked {
+    background-color: lightyellow !important; /* Le important est là si acceptée + bloquée */
+}
+.question-container.blocked::before {
+    content: "Bloquée";
+}
+
 .question-container h2 {
     font-size: 1.4em;
 }
