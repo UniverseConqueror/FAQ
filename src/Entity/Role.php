@@ -26,6 +26,11 @@ class Role
      */
     private $roleString;
 
+    public function __toString()
+    {
+        return $this->name;
+    }
+
     public function getId()
     {
         return $this->id;

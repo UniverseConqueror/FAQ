@@ -35,3 +35,10 @@
     - Supprimer la colonne `Id`.
     - Traduire les textes en français.
     - Ajout de Flash Messages.
+
+## Changer le rôle d'un membre en modérateur
+
+- Ici on veut juste une liste de users et une page pour modifier leur statut => on va éviter le CRUD et passer par `make:form` et utiliser le contrôleur `User` existant. Créons une route `/admin/user`.
+- On met à jour l'`access_control` sur le rôle `ROLE_ADMIN`.
+- On ajoute le lien conditionné dans le header.
+- On ajoute une `__toString()` ou on spécifie le champ à afficher dans le `ChoiceType`.

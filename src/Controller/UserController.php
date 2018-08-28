@@ -12,6 +12,8 @@ use App\Form\RegisterType;
 use App\Form\UserEditType;
 use App\Form\UserPasswordType;
 use App\Repository\RoleRepository;
+use App\Repository\UserRepository;
+use App\Form\UserType;
 
 class UserController extends Controller
 {
@@ -109,6 +111,40 @@ class UserController extends Controller
         }
 
         return $this->render('user/edit_password.html.twig', [
+            'form' => $form->createView(),
+        ]);
+    }
+
+    /**
+     * @Route("/admin/user", name="admin_user", methods="GET")
+     */
+    public function admin(UserRepository $userRepository)
+    {
+        return $this->render('user/admin.html.twig', [
+            'users' => $userRepository->findAll()
+        ]);
+    }
+
+    /**
+     * @Route("/admin/user/moderate/{id}", name="admin_user_moderate", methods="GET|POST")
+     */
+    public function moderate(Request $request, User $user)
+    {
+        $form = $this->createForm(UserType::class, $user);
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->flush();
+
+            $this->addFlash('success', 'User modifié.');
+
+            return $this->redirectToRoute('admin_user_moderate', ['id' => $user->getId()]);
+        }
+
+        return $this->render('user/moderate.html.twig', [
             'form' => $form->createView(),
         ]);
     }
