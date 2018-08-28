@@ -6,6 +6,7 @@
             {{ question.title }}
         {% else %}
             <a href="{{ path('question_show', {'id': question.id}) }}">{{ question.title }}</a>
+            <span class="badge badge-info">{{ question.votes}} votes</span>
         {% endif %}
         <span class="badge badge-{{ question.isSolved ? 'success' : 'warning' }}">
             {{ question.isSolved ? 'Résolue' : 'En attente' }}

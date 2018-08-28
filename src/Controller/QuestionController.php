@@ -17,6 +17,10 @@ use App\Repository\QuestionRepository;
 use App\Repository\UserRepository;
 use App\Entity\User;
 use App\Repository\AnswerRepository;
+use App\Entity\UserQuestionVote;
+use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
+use App\Repository\UserQuestionVoteRepository;
 
 class QuestionController extends Controller
 {
@@ -46,7 +50,7 @@ class QuestionController extends Controller
             $selectedTag = $tag->getName();
         } else {
             // Sans tag
-            $questions = $questionRepository->findBy(['isBlocked' => false], ['createdAt' => 'DESC']);
+            $questions = $questionRepository->findBy(['isBlocked' => false], ['votes' => 'DESC', 'createdAt' => 'DESC']);
             $selectedTag = null;
         }
 
@@ -100,6 +104,9 @@ class QuestionController extends Controller
         $answersNonBlocked = $answerRepository->findBy([
             'question' => $question,
             'isBlocked' => false,
+        ], [
+            'isValidated' => 'DESC',
+            'votes' => 'DESC',
         ]);
 
         return $this->render('question/show.html.twig', [
@@ -163,4 +170,34 @@ class QuestionController extends Controller
         return $this->redirectToRoute('question_show', ['id' => $question->getId()]);
     }
 
+    /**
+     * @Route("/question/vote/{id}", name="question_vote")
+     */
+    public function vote(Question $question = null, EntityManagerInterface $em, UserQuestionVoteRepository $uqvr)
+    {
+        if (null === $question) {
+            throw $this->createNotFoundException('Question non trouvée.');
+        }
+
+        $user = $this->getUser();
+
+        $questionVote = new UserQuestionVote();
+        $questionVote->setUser($user);
+        $questionVote->setQuestion($question);
+
+        $em->persist($questionVote);
+        try {
+            $em->flush();
+            $this->addFlash('success', 'Question votée.');
+            // On update le nombre de vote à cette question
+            $nbVotes = count($uqvr->findBy(['question' => $question]));
+            $question->setVotes($nbVotes);
+            $em->flush();
+        } catch(UniqueConstraintViolationException $e) {
+            $this->addFlash('danger', 'Vous avez déjà voté pour cette question.');
+        }
+
+        return $this->redirectToRoute('question_show', ['id' => $question->getId()]);
+
+    }
 }

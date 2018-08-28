@@ -12,6 +12,11 @@
     <p><a href="{{ path('admin_question_toggle', {'id': question.id}) }}" class="btn btn-warning">{{ btnLabel }}</a></p>
 {% endif %}
 
+{% if is_granted('ROLE_USER') %}
+<hr>
+<p><a href="{{ path('question_vote', {'id': question.id}) }}" class="btn btn-success">Voter +1 <span class="badge badge-light ml-2">{{ question.votes }}</span></a></p>
+{% endif %}
+
 <hr>
 
 <h3>{{ question.answers|length }} Réponse(s)</h3>
@@ -36,6 +41,12 @@
     <div class="small-grey-text">
         par <b class="username">{{ answer.user.username }}</b> le {{ answer.createdAt|date("d/m/Y à h:i") }}
     </div>
+
+    {% if is_granted('ROLE_USER') %}
+        <hr>
+        <p><a href="{{ path('answer_vote', {'id': answer.id}) }}" class="btn btn-success">Voter +1 <span class="badge badge-light ml-2">{{ answer.votes }}</span></a></p>
+    {% endif %}
+
 </div>
 {% else %}
 <p class="text-secondary">Pas de réponse pour le moment, une idée, ou bien connaissez-vous quelqu'un qui pourrait répondre ?</p>

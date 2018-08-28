@@ -25,6 +25,7 @@ class QuestionRepository extends ServiceEntityRepository
             ->innerJoin('q.tags', 't')
             ->andWhere('t = :tag')
             ->andWhere('q.isBlocked = false')
+            ->addOrderBy('q.votes', 'DESC')
             ->setParameter('tag', $tag)
             ->getQuery()
             ->getResult();
