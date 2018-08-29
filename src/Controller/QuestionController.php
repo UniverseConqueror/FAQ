@@ -22,6 +22,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use App\Repository\UserQuestionVoteRepository;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 class QuestionController extends Controller
 {
@@ -190,12 +191,17 @@ class QuestionController extends Controller
     }
 
     /**
-     * @Route("/question/vote/{id}", name="question_vote")
+     * @Route("/question/vote/{id}", name="question_vote", methods={"GET|POST"})
      */
     public function vote(Question $question = null, EntityManagerInterface $em, UserQuestionVoteRepository $uqvr)
     {
         if (null === $question) {
-            throw $this->createNotFoundException('Question non trouvée.');
+            // JSON si 404
+            return new JsonResponse([
+                'error' => true,
+                'message' => 'Question non trouvée.',
+                'data' => null,
+            ]);
         }
 
         $user = $this->getUser();
@@ -207,15 +213,27 @@ class QuestionController extends Controller
         $em->persist($questionVote);
         try {
             $em->flush();
-            $this->addFlash('success', 'Question votée.');
             // On update le nombre de vote à cette question
             $nbVotes = count($uqvr->findBy(['question' => $question]));
             $question->setVotes($nbVotes);
             $em->flush();
-        } catch (UniqueConstraintViolationException $e) {
-            $this->addFlash('danger', 'Vous avez déjà voté pour cette question.');
-        }
+            // JSON si success
+            return new JsonResponse([
+                'error' => false,
+                'message' => 'Question votée.',
+                'question' => [
+                    'id' => $question->getId(),
+                    'votes' => $question->getVotes(),
+                ],
+            ]);
 
-        return $this->redirectToRoute('question_show', ['id' => $question->getId()]);
+        } catch (UniqueConstraintViolationException $e) {
+            // JSON si déjà voté
+            return new JsonResponse([
+                'error' => true,
+                'message' => 'Vous avez déjà voté pour cette question.',
+                'data' => null,
+            ]);
+        }
     }
 }

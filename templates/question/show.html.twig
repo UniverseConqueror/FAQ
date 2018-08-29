@@ -14,7 +14,7 @@
 
 {% if is_granted('ROLE_USER') %}
 <hr>
-<p><a href="{{ path('question_vote', {'id': question.id}) }}" class="btn btn-success">Voter +1 <span class="badge badge-light ml-2">{{ question.votes }}</span></a></p>
+<p><a id="vote-button" data-id="{{ question.id }}" href="{{ path('question_vote', {'id': question.id}) }}" class="btn btn-success">Voter +1 <span class="badge badge-light ml-2">{{ question.votes }}</span></a></p>
 {% endif %}
 
 <hr>
@@ -53,11 +53,16 @@
 {% endfor %}
 
 <hr>
-<h4>Poser une question</h4>
+<h4>Proposer une réponse</h4>
 
 {{ form_start(form) }}
     {{ form_widget(form) }}
     <button type="submit" class="btn btn-primary">Soumettre</button>
 {{ form_end(form) }}
 
+{% endblock %}
+
+{% block js %}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="{{ asset('js/app.js') }}"></script>
 {% endblock %}

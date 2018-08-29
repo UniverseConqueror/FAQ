@@ -25,3 +25,13 @@
     - Ajoutons un paramètre `questionsPerPage` dans `services.yaml` afin de configurer cette valeur hors du contrôleur.
     - `setFirstResult()` prend donc en argument `$start * $perPage`.
     - Ajout du template de pagination (un sans tag, un avec => peut probablement être optimisé...).
+
+## Bonus AJAX
+
+> Sur Vote +1
+
+- On transforme la route `question/vote` pour recevoir du POST et renvoyer du JSON.
+- On ajoute un block Twig js pour y mettre, seulement sur la page question/show.
+    - On installe jQuery pour plus de facilité.
+    - On crée un code JS qui appelle `/question/vote/{id}` en POST depuis un clic sur le bouton de vote.
+    - Sur ce bouton de vote on met l'id de la question en attribut HTML pour la récupérer depuis JS.
