@@ -51,7 +51,7 @@ class AppFixtures extends Fixture
             $role->setName($roles[$roleGroup]);
             $manager->persist($role);
 
-            print 'Adding role '.$role->getName();
+            print 'Adding role '.$role->getName()."\n";
             
             foreach($users as $u) {
                 // New user based on list
@@ -65,7 +65,7 @@ class AppFixtures extends Fixture
                 // Persist
                 $manager->persist($user);
 
-                print 'Adding user '.$user->getUsername();
+                print 'Adding user '.$user->getUsername()."\n";
             }
         }
 

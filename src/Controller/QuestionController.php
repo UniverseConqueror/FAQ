@@ -26,14 +26,14 @@ use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 class QuestionController extends Controller
 {
     /**
-     * @Route("/", name="question_list")
-     * @Route("/tag/{name}", name="question_list_by_tag")
+     * @Route("/{page<\d+>}", name="question_list", defaults={"page"="0"})
+     * @Route("/tag/{name}/{page}", name="question_list_by_tag")
      * @ParamConverter("tag", class="App:Tag")
      */
-    public function list(Request $request, QuestionRepository $questionRepository, Tag $tag = null, AuthorizationCheckerInterface $authChecker)
+    public function list(Request $request, QuestionRepository $questionRepository, Tag $tag = null, AuthorizationCheckerInterface $authChecker, $page = 0)
     {
         // On vérifie si on vient de la route "question_list_by_tag"
-        if($request->attributes->get('_route') == 'question_list_by_tag' && $tag === null) {
+        if ($request->attributes->get('_route') == 'question_list_by_tag' && $tag === null) {
             // On récupère le name passé dans l'attribut de requête
             $params = $request->attributes->get('_route_params');
             $selectedTag = $params['name'];
@@ -42,27 +42,28 @@ class QuestionController extends Controller
             // Flash + redirect
             $this->addFlash('success', 'Le mot-clé "'.$selectedTag.'" n\'existe pas. Affichage de toutes les questions.');
             return $this->redirectToRoute('question_list');
+        } else {
+            // Gestion du tag sélectionné
+            $selectedTag = isset($tag) ? $tag->getName() : null;
         }
 
         // Questions non bloquées visibles par modérateur
         if ($authChecker->isGranted('ROLE_MODERATOR')) {
             $blockedFilter = false;
-            $criteria = [];
         } else {
             $blockedFilter = true;
-            $criteria = ['isBlocked' => false];
         }
 
-        // On va chercher la liste des questions par ordre inverse de date
-        if($tag) {
-            // Avec tag
-            $questions = $questionRepository->findByTag($tag, $blockedFilter);
-            $selectedTag = $tag->getName();
-        } else {
-            // Sans tag
-            $questions = $questionRepository->findBy($criteria, ['votes' => 'DESC', 'createdAt' => 'DESC']);
-            $selectedTag = null;
-        }
+        // Gestion pagination
+        $start = $page;
+        $perPage = $this->getParameter('questionsPerPage');
+        // Requête générique questions
+        $questions = $questionRepository->findByIsBlockedAndTagOrderByVotes($blockedFilter, $tag, $start, $perPage);
+        // Pagination du template
+        $pagination = [
+            'start' => $page,
+            'nbPages' => (int) ceil(count($questions) / $perPage),
+        ];
 
         // Nuage de mots-clés
         $tags = $this->getDoctrine()->getRepository(Tag::class)->findBy([], ['name' => 'ASC']);
@@ -71,6 +72,7 @@ class QuestionController extends Controller
             'questions' => $questions,
             'tags' => $tags,
             'selectedTag' => $selectedTag,
+            'pagination' => $pagination,
         ]);
     }
 
@@ -112,15 +114,17 @@ class QuestionController extends Controller
 
         // Réponses non bloquées visible par modérateur
         if ($authChecker->isGranted('ROLE_MODERATOR')) {
-            $blockedCriteria = true;
+            $blockedCriteria = [
+                'question' => $question,
+            ];
         } else {
-            $blockedCriteria = false;
+            $blockedCriteria = [
+                'question' => $question,
+                'isBlocked' => false,
+            ];
         }
 
-        $answersNonBlocked = $answerRepository->findBy([
-            'question' => $question,
-            'isBlocked' => $blockedCriteria,
-        ], [
+        $answersNonBlocked = $answerRepository->findBy($blockedCriteria, [
             'isValidated' => 'DESC',
             'votes' => 'DESC',
         ]);
@@ -144,7 +148,6 @@ class QuestionController extends Controller
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-
             $question = $form->getData();
 
             // User : pour le moment, allons chercher un user issue de notre liste
@@ -209,11 +212,10 @@ class QuestionController extends Controller
             $nbVotes = count($uqvr->findBy(['question' => $question]));
             $question->setVotes($nbVotes);
             $em->flush();
-        } catch(UniqueConstraintViolationException $e) {
+        } catch (UniqueConstraintViolationException $e) {
             $this->addFlash('danger', 'Vous avez déjà voté pour cette question.');
         }
 
         return $this->redirectToRoute('question_show', ['id' => $question->getId()]);
-
     }
 }

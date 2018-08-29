@@ -14,3 +14,14 @@
 - Conditionnement du critère de recherche selon si modérateur ou non.
 - Modification de la requête custom `findByTag()` pour traiter ce cas.
 - Rien à faire côté template, tout se situe au niveau des requêtes.
+
+## Ajouter une pagination
+
+- On va mutualiser la requête de liste avec le tag et le rôle du modérateur.
+    - Attention on a omis le `leftJoin()` qui permet d'obtenir les questoins sans tag ! On l'ajoute.
+- On ajoute le Paginator "en dur" (on teste avec les valeurs 0 et 7 par ex.).
+- On gère les pages :
+    - On ajoute `$start` et `$perPage` à la méthode `findByIsBlockedAndTagOrderByVotes()`.
+    - Ajoutons un paramètre `questionsPerPage` dans `services.yaml` afin de configurer cette valeur hors du contrôleur.
+    - `setFirstResult()` prend donc en argument `$start * $perPage`.
+    - Ajout du template de pagination (un sans tag, un avec => peut probablement être optimisé...).

@@ -4,6 +4,7 @@ namespace App\Repository;
 
 use App\Entity\Question;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\Tools\Pagination\Paginator;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 
 /**
@@ -18,49 +19,29 @@ class QuestionRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, Question::class);
     }
-
-    public function findByTag($tag, $blockedFilter)
+    
+    public function findByIsBlockedAndTagOrderByVotes($blockedFilter, $tag, $start, $perPage)
     {
+        // Requête de base
         $query = $this->createQueryBuilder('q')
-            ->innerJoin('q.tags', 't')
-            ->andWhere('t = :tag')
-            ->addOrderBy('q.votes', 'DESC')
+        ->leftJoin('q.tags', 't')
+        ->addOrderBy('q.votes', 'DESC')
+        ->addOrderBy('q.createdAt', 'DESC');
+        
+        // Si tag présent
+        if ($tag) {
+            $query->andWhere('t = :tag')
             ->setParameter('tag', $tag);
-            
+        }
+        
+        // Si filtre isBlocked présent
         if ($blockedFilter) {
             $query->andWhere('q.isBlocked = false');
         }
+
+        // Ajout Paginator
+        $query->setFirstResult($start * $perPage)->setMaxResults($perPage);
             
-        
-        return $query->getQuery()->getResult();
+        return new Paginator($query);
     }
-
-//    /**
-//     * @return Question[] Returns an array of Question objects
-//     */
-    /*
-    public function findByExampleField($value)
-    {
-        return $this->createQueryBuilder('q')
-            ->andWhere('q.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('q.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
-    }
-    */
-
-    /*
-    public function findOneBySomeField($value): ?Question
-    {
-        return $this->createQueryBuilder('q')
-            ->andWhere('q.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
-    }
-    */
 }
