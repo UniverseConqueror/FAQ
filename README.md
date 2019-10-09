@@ -1,3 +1,5 @@
+:hand: Cette correction est codée en **Symfony 4.1**, elle reste donc compatible avec la spé dans ses grandes lignes. Si vous trouvez des liens ou infos non pertinents signale-le à votre prof' de spé.
+
 # Documents de conception
 
 ## Etapes de conception
